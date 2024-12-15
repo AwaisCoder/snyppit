@@ -342,9 +342,13 @@ export const THEMES: Theme[] = [
   { id: "github-dark", label: "GitHub Dark", color: "#0d1117" },
   { id: "monokai", label: "Monokai", color: "#272822" },
   { id: "solarized-dark", label: "Solarized Dark", color: "#002b36" },
+  { id: "neon-purple", label: "Neon Purple", color: "#9b00ff" },
+  { id: "soft-sunshine", label: "Soft Sunshine", color: "#FFF8E1" },
 ];
 
-export const THEME_DEFINITONS = {
+import { editor } from "monaco-editor";
+
+export const THEME_DEFINITIONS: Record<string, editor.IStandaloneThemeData> = {
   "github-dark": {
     base: "vs-dark",
     inherit: true,
@@ -417,11 +421,85 @@ export const THEME_DEFINITONS = {
       "editor.selectionHighlightBackground": "#073642",
     },
   },
+  "neon-green": {
+    base: "vs-dark",
+    inherit: true,
+    rules: [
+      { token: "comment", foreground: "a3ff84" },
+      { token: "string", foreground: "00ff00" },
+      { token: "keyword", foreground: "00ff7f" },
+      { token: "number", foreground: "00ffdd" },
+      { token: "type", foreground: "00ff99" },
+      { token: "class", foreground: "33ff33" },
+      { token: "function", foreground: "33cc33" },
+      { token: "variable", foreground: "80ff80" },
+      { token: "operator", foreground: "00e6e6" },
+    ],
+    colors: {
+      "editor.background": "#001d00",
+      "editor.foreground": "#00ff00",
+      "editor.lineHighlightBackground": "#003300",
+      "editorLineNumber.foreground": "#66ff66",
+      "editor.selectionBackground": "#004d00",
+      "editor.inactiveSelectionBackground": "#004d0033",
+    },
+  },
+  "neon-purple": {
+    base: "vs-dark",
+    inherit: true,
+    rules: [
+      { token: "comment", foreground: "d2a8ff" },
+      { token: "string", foreground: "9b00ff" },
+      { token: "keyword", foreground: "a100ff" },
+      { token: "number", foreground: "d100ff" },
+      { token: "type", foreground: "c100ff" },
+      { token: "class", foreground: "a200ff" },
+      { token: "function", foreground: "9900ff" },
+      { token: "variable", foreground: "b300ff" },
+      { token: "operator", foreground: "c700ff" },
+    ],
+    colors: {
+      "editor.background": "#1a0033",
+      "editor.foreground": "#c7a0ff",
+      "editor.lineHighlightBackground": "#2c0033",
+      "editorLineNumber.foreground": "#c5aaff",
+      "editor.selectionBackground": "#52009d",
+      "editor.inactiveSelectionBackground": "#52009d55",
+    },
+  },
+  "soft-sunshine": {
+    base: "vs", // Base theme for soft-sunshine
+    inherit: true,
+    rules: [
+      { token: "comment", foreground: "D8B841" }, // Soft yellow for comments
+      { token: "string", foreground: "F1C40F" }, // Bright yellow for strings
+      { token: "keyword", foreground: "FF6347" }, // Soft coral for keywords
+      { token: "number", foreground: "FFD700" }, // Golden yellow for numbers
+      { token: "type", foreground: "FF8C00" }, // Soft orange for types
+      { token: "class", foreground: "F39C12" }, // Sunflower yellow for classes
+      { token: "function", foreground: "FF4500" }, // Warm red-orange for functions
+      { token: "variable", foreground: "F5B041" }, // Warm yellow-orange for variables
+      { token: "operator", foreground: "F39C12" }, // Golden yellow for operators
+    ],
+    colors: {
+      "editor.background": "#FFF8E1", // Soft sunshine yellow for background
+      "editor.foreground": "#F39C12", // Sunflower yellow for text
+      "editorLineNumber.foreground": "#D8B841", // Soft yellow for line numbers
+      "editor.selectionBackground": "#FFEB3B", // Soft yellow for selection
+      "editor.lineHighlightBackground": "#D2042D", // Darker orange for line highlight (new color)
+      "editorCursor.foreground": "#F5B041", // Warm yellow-orange for cursor
+      "editor.selectionHighlightBackground": "#F5B041", // Yellow-orange selection highlight
+      // Modify selection to make it less intense
+      "editor.selectionForeground": "#2C3E50", // Darker text color when selected, for contrast
+      "editor.lineHighlightBorder": "#FF4500", // Dark red-orange border for line highlight (new color)
+    },
+  },
 };
+
 
 // Helper function to define themes in Monaco
 export const defineMonacoThemes = (monaco: Monaco) => {
-  Object.entries(THEME_DEFINITONS).forEach(([themeName, themeData]) => {
+  Object.entries(THEME_DEFINITIONS).forEach(([themeName, themeData]) => {
     monaco.editor.defineTheme(themeName, {
       base: themeData.base,
       inherit: themeData.inherit,

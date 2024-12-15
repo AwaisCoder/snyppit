@@ -1,7 +1,7 @@
 export default {
   providers: [
     {
-      domain: "https://enabling-alien-47.clerk.accounts.dev/",
+      domain: "https://intent-squirrel-1.clerk.accounts.dev",
       applicationID: "convex",
     },
   ],
