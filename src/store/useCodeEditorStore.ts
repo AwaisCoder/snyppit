@@ -1,63 +1,29 @@
-// useCodeEditorStore.ts
 import { CodeEditorState } from "./../types/index";
 import { LANGUAGE_CONFIG } from "@/app/(root)/_constants";
 import { create } from "zustand";
 import { Monaco } from "@monaco-editor/react";
-import OpenAI from 'openai';
-import debounce from 'lodash/debounce';
-
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true // Note: Move to backend in production
-});
 
 const getInitialState = () => {
+  // if we're on the server, return default values
   if (typeof window === "undefined") {
     return {
       language: "javascript",
       fontSize: 16,
       theme: "vs-dark",
-      suggestionsEnabled: true,
     };
   }
 
+  // if we're on the client, return values from local storage bc localStorage is a browser API.
   const savedLanguage = localStorage.getItem("editor-language") || "javascript";
   const savedTheme = localStorage.getItem("editor-theme") || "vs-dark";
-  const savedFontSize = localStorage.getItem("editor-font-size") || "16";
-  const savedSuggestionsEnabled = localStorage.getItem("suggestions-enabled") !== "false";
+  const savedFontSize = localStorage.getItem("editor-font-size") || 16;
 
   return {
     language: savedLanguage,
     theme: savedTheme,
     fontSize: Number(savedFontSize),
-    suggestionsEnabled: savedSuggestionsEnabled,
   };
 };
-
-// Debounced suggestion request to prevent too many API calls
-const debouncedRequest = debounce(async (
-  prompt: string,
-  language: string,
-  callback: (suggestion: string) => void
-) => {
-  try {
-    const response = await openai.completions.create({
-      model: "gpt-3.5-turbo-instruct",
-      prompt: `Complete the following ${language} code:\n${prompt}`,
-      max_tokens: 100,
-      temperature: 0.3,
-      stop: ["\n\n"],
-    });
-
-    const suggestion = response.choices[0]?.text;
-    if (suggestion) {
-      callback(suggestion);
-    }
-  } catch (error) {
-    console.error('Error getting suggestions:', error);
-  }
-}, 500);
 
 export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
   const initialState = getInitialState();
@@ -76,48 +42,6 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
       const savedCode = localStorage.getItem(`editor-code-${get().language}`);
       if (savedCode) editor.setValue(savedCode);
 
-      // Set up suggestion provider
-      editor.getModel()?.setEOL(0);
-      editor.updateOptions({ suggestOnTriggerCharacters: true });
-
-      // Add event listener for content changes
-      editor.onDidChangeModelContent(async (event) => {
-        if (!get().suggestionsEnabled) return;
-
-        const position = editor.getPosition();
-        if (!position) return;
-
-        // Only trigger suggestions after specific characters
-        const lastChar = event.changes[0]?.text;
-        const triggerChars = ['{', '(', '.', ' ', '\n'];
-        if (!triggerChars.includes(lastChar)) return;
-
-        const model = editor.getModel();
-        if (!model) return;
-
-        // Get context for suggestion
-        const currentLine = model.getLineContent(position.lineNumber);
-        const previousLines = model.getLinesContent().slice(
-          Math.max(0, position.lineNumber - 5),
-          position.lineNumber - 1
-        );
-        const context = [...previousLines, currentLine].join('\n');
-
-        debouncedRequest(context, get().language, (suggestion) => {
-          if (!get().suggestionsEnabled) return;
-
-          editor.trigger('keyboard', 'editor.action.showHover', {
-            text: suggestion,
-            range: {
-              startLineNumber: position.lineNumber,
-              startColumn: position.column,
-              endLineNumber: position.lineNumber,
-              endColumn: position.column + suggestion.length
-            }
-          });
-        });
-      });
-
       set({ editor });
     },
 
@@ -132,6 +56,7 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
     },
 
     setLanguage: (language: string) => {
+      // Save current language code before switching
       const currentCode = get().editor?.getValue();
       if (currentCode) {
         localStorage.setItem(`editor-code-${get().language}`, currentCode);
@@ -146,13 +71,90 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
       });
     },
 
-    toggleSuggestions: () => {
-      const newValue = !get().suggestionsEnabled;
-      localStorage.setItem("suggestions-enabled", newValue.toString());
-      set({ suggestionsEnabled: newValue });
-    },
+    runCode: async () => {
+      const { language, getCode } = get();
+      const code = getCode();
 
-    // ... rest of your existing methods (runCode, etc.)
+      if (!code) {
+        set({ error: "Please enter some code" });
+        return;
+      }
+
+      set({ isRunning: true, error: null, output: "" });
+
+      try {
+        const runtime = LANGUAGE_CONFIG[language].pistonRuntime;
+        const response = await fetch("https://emkc.org/api/v2/piston/execute", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            language: runtime.language,
+            version: runtime.version,
+            files: [{ content: code }],
+          }),
+        });
+
+        const data = await response.json();
+
+        console.log("data back from piston:", data);
+
+        // handle API-level erros
+        if (data.message) {
+          set({ error: data.message, executionResult: { code, output: "", error: data.message } });
+          return;
+        }
+
+        // handle compilation errors
+        if (data.compile && data.compile.code !== 0) {
+          const error = data.compile.stderr || data.compile.output;
+          set({
+            error,
+            executionResult: {
+              code,
+              output: "",
+              error,
+            },
+          });
+          return;
+        }
+
+        if (data.run && data.run.code !== 0) {
+          const error = data.run.stderr || data.run.output;
+          set({
+            error,
+            executionResult: {
+              code,
+              output: "",
+              error,
+            },
+          });
+          return;
+        }
+
+        // if we get here, execution was successful
+        const output = data.run.output;
+
+        set({
+          output: output.trim(),
+          error: null,
+          executionResult: {
+            code,
+            output: output.trim(),
+            error: null,
+          },
+        });
+      } catch (error) {
+        console.log("Error running code:", error);
+        set({
+          error: "Error running code",
+          executionResult: { code, output: "", error: "Error running code" },
+        });
+      } finally {
+        set({ isRunning: false });
+      }
+    },
   };
 });
 
