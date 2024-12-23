@@ -41,6 +41,7 @@ export interface CodeEditorState {
   language: string;
   output: string;
   isRunning: boolean;
+  suggestionsEnabled: boolean;
   error: string | null;
   theme: string;
   fontSize: number;
@@ -53,6 +54,7 @@ export interface CodeEditorState {
   setTheme: (theme: string) => void;
   setFontSize: (fontSize: number) => void;
   runCode: () => Promise<void>;
+  toggleSuggestions: () => void;
 }
 
 export interface Snippet {

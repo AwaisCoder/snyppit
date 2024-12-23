@@ -1,3 +1,4 @@
+// EditorPanel.tsx
 "use client";
 import { useCodeEditorStore } from "@/store/useCodeEditorStore";
 import { useEffect, useState } from "react";
@@ -5,7 +6,7 @@ import { defineMonacoThemes, LANGUAGE_CONFIG } from "../_constants";
 import { Editor } from "@monaco-editor/react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { RotateCcwIcon, ShareIcon, TypeIcon } from "lucide-react";
+import { RotateCcwIcon, ShareIcon, TypeIcon, WandIcon } from "lucide-react";
 import { useClerk } from "@clerk/nextjs";
 import { EditorPanelSkeleton } from "./EditorPanelSkeleton";
 import useMounted from "@/hooks/useMounted";
@@ -14,7 +15,16 @@ import ShareSnippetDialog from "./ShareSnippetDialog";
 function EditorPanel() {
   const clerk = useClerk();
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
-  const { language, theme, fontSize, editor, setFontSize, setEditor } = useCodeEditorStore();
+  const {
+    language,
+    theme,
+    fontSize,
+    editor,
+    suggestionsEnabled,
+    setFontSize,
+    setEditor,
+    toggleSuggestions
+  } = useCodeEditorStore();
 
   const mounted = useMounted();
 
@@ -62,6 +72,19 @@ function EditorPanel() {
             </div>
           </div>
           <div className="flex items-center gap-3">
+            {/* AI Suggestions Toggle */}
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={toggleSuggestions}
+              className={`p-2 rounded-lg ring-1 ring-white/5 transition-colors ${suggestionsEnabled ? 'bg-blue-600/20' : 'bg-[#1e1e2e]'
+                }`}
+              aria-label="Toggle AI suggestions"
+            >
+              <WandIcon className={`size-4 ${suggestionsEnabled ? 'text-blue-400' : 'text-gray-400'
+                }`} />
+            </motion.button>
+
             {/* Font Size Slider */}
             <div className="flex items-center gap-3 px-3 py-2 bg-[#1e1e2e] rounded-lg ring-1 ring-white/5">
               <TypeIcon className="size-4 text-gray-400" />
@@ -99,12 +122,12 @@ function EditorPanel() {
                from-blue-500 to-blue-600 opacity-90 hover:opacity-100 transition-opacity"
             >
               <ShareIcon className="size-4 text-white" />
-              <span className="text-sm font-medium text-white ">Share</span>
+              <span className="text-sm font-medium text-white">Share</span>
             </motion.button>
           </div>
         </div>
 
-        {/* Editor  */}
+        {/* Editor */}
         <div className="relative group rounded-xl overflow-hidden ring-1 ring-white/[0.05]">
           {clerk.loaded && (
             <Editor
@@ -130,6 +153,16 @@ function EditorPanel() {
                 lineHeight: 1.6,
                 letterSpacing: 0.5,
                 roundedSelection: true,
+                quickSuggestions: {
+                  other: true,
+                  comments: true,
+                  strings: true
+                },
+                suggestOnTriggerCharacters: true,
+                parameterHints: { enabled: true },
+                ordBasedSuggestions: true,
+                suggestSelection: "first",
+                tabCompletion: "on",
                 scrollbar: {
                   verticalScrollbarSize: 8,
                   horizontalScrollbarSize: 8,
@@ -145,4 +178,5 @@ function EditorPanel() {
     </div>
   );
 }
+
 export default EditorPanel;
