@@ -7,7 +7,8 @@ import SnippetsPageSkeleton from "./_components/SnippetsPageSkeleton";
 import NavigationHeader from "@/components/NavigationHeader";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { BookOpen, Code, Grid, Layers, Search, Tag, X } from "lucide-react";
+import { BookOpen, Code, Grid, Layers, Search, X, Tag } from "lucide-react";
+import { Badge } from "../../../components/ui/badge";
 import SnippetCard from "./_components/SnippetCard";
 
 function SnippetsPage() {
@@ -27,7 +28,7 @@ function SnippetsPage() {
   }
 
   const languages = [...new Set(snippets.map((s) => s.language))];
-  const popularLanguages = languages.slice(0, 5);
+  const popularLanguages = languages;
 
   const filteredSnippets = snippets.filter((snippet) => {
     const matchesSearch =
@@ -35,13 +36,14 @@ function SnippetsPage() {
       snippet.language.toLowerCase().includes(searchQuery.toLowerCase()) ||
       snippet.userName.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesLanguage = !selectedLanguage || snippet.language === selectedLanguage;
+    const matchesLanguage =
+      !selectedLanguage || snippet.language === selectedLanguage;
 
     return matchesSearch && matchesLanguage;
   });
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f]">
+    <div className="min-h-screen bg-gradient-radial from-blue-500/45 to-black">
       <NavigationHeader />
 
       <div className="relative max-w-7xl mx-auto px-4 py-12">
@@ -50,17 +52,31 @@ function SnippetsPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r
-             from-blue-500/10 to-purple-500/10 text-sm text-gray-400 mb-6"
+            className="inline-block mb-5"
           >
-            <BookOpen className="w-4 h-4" />
-            Community Code Library
+            <Badge
+              variant="outline"
+              className="
+          px-4 py-1.5 
+          bg-gradient-to-r from-blue-500/10 to-purple-500/10 
+          text-sm text-gray-300
+          border-none
+          shadow-[0_0_15px_rgba(59,130,246,0.5)]
+          transition-all duration-300
+          hover:shadow-[0_0_20px_rgba(168,85,247,0.7)]
+          hover:bg-gradient-to-r hover:from-blue-500/20 hover:to-purple-500/20
+          hover:text-gray-100
+        "
+            >
+              <BookOpen className="w-4 h-4 mr-2" />
+              Community Code Library
+            </Badge>
           </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-100 to-gray-300 text-transparent bg-clip-text mb-6"
+            className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-gray-100 to-gray-300 text-transparent bg-clip-text mb-6"
           >
             Discover & Share Code Snippets
           </motion.h1>
@@ -99,11 +115,12 @@ function SnippetsPage() {
               <Tag className="w-4 h-4 text-gray-400" />
               <span className="text-sm text-gray-400">Languages:</span>
             </div>
-
             {popularLanguages.map((lang) => (
               <button
                 key={lang}
-                onClick={() => setSelectedLanguage(lang === selectedLanguage ? null : lang)}
+                onClick={() =>
+                  setSelectedLanguage(lang === selectedLanguage ? null : lang)
+                }
                 className={`
                     group relative px-3 py-1.5 rounded-lg transition-all duration-200
                     ${
@@ -114,7 +131,11 @@ function SnippetsPage() {
                   `}
               >
                 <div className="flex items-center gap-2">
-                  <img src={`/${lang}.png`} alt={lang} className="w-4 h-4 object-contain" />
+                  <img
+                    src={`/${lang}.png`}
+                    alt={lang}
+                    className="w-4 h-4 object-contain"
+                  />
                   <span className="text-sm">{lang}</span>
                 </div>
               </button>
@@ -192,7 +213,9 @@ function SnippetsPage() {
               >
                 <Code className="w-8 h-8 text-gray-400" />
               </div>
-              <h3 className="text-xl font-medium text-white mb-3">No snippets found</h3>
+              <h3 className="text-xl font-medium text-white mb-3">
+                No snippets found
+              </h3>
               <p className="text-gray-400 mb-6">
                 {searchQuery || selectedLanguage
                   ? "Try adjusting your search query or filters"

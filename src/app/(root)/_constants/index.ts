@@ -10,6 +10,7 @@ type LanguageConfig = Record<
     pistonRuntime: { language: string; version: string };
     monacoLanguage: string;
     defaultCode: string;
+    extension: string;
   }
 >;
 
@@ -35,6 +36,7 @@ console.log('Even numbers:', evenNumbers);
 // Calculate sum using reduce
 const sum = numbers.reduce((acc, curr) => acc + curr, 0);
 console.log('Sum of numbers:', sum);`,
+    extension: "js",
   },
   typescript: {
     id: "typescript",
@@ -72,6 +74,7 @@ console.log('Original numbers:', math.numbers);
 console.log('Squared numbers:', math.squares());
 console.log('Even numbers:', math.evenNumbers());
 console.log('Sum of numbers:', math.sum());`,
+    extension: "ts",
   },
   python: {
     id: "python",
@@ -94,6 +97,7 @@ print(f"Even numbers: {even_numbers}")
 # Calculate sum
 numbers_sum = sum(numbers)
 print(f"Sum of numbers: {numbers_sum}")`,
+    extension: "py",
   },
   java: {
     id: "java",
@@ -136,6 +140,7 @@ print(f"Sum of numbers: {numbers_sum}")`,
       System.out.println();
   }
 }`,
+    extension: "java",
   },
   go: {
     id: "go",
@@ -177,6 +182,7 @@ func main() {
   }
   fmt.Println("Sum of numbers:", sum)
 }`,
+    extension: "go",
   },
   rust: {
     id: "rust",
@@ -210,6 +216,7 @@ func main() {
     let sum: i32 = numbers.iter().sum();
     println!("Sum of numbers: {}", sum);
 }`,
+    extension: "rs",
   },
   cpp: {
     id: "cpp",
@@ -254,6 +261,7 @@ int main() {
     
     return 0;
 }`,
+    extension: "cpp",
   },
   csharp: {
     id: "csharp",
@@ -285,6 +293,7 @@ class Program {
         Console.WriteLine($"Sum of numbers: {sum}");
     }
 }`,
+    extension: "cs",
   },
   ruby: {
     id: "ruby",
@@ -309,6 +318,7 @@ puts "Even numbers: #{even_numbers.join(' ')}"
 # Calculate sum
 sum = numbers.sum
 puts "Sum of numbers: #{sum}"`,
+    extension: "rb",
   },
   swift: {
     id: "swift",
@@ -333,6 +343,7 @@ print("Even numbers: \\(evenNumbers)")
 // Calculate sum
 let sum = numbers.reduce(0, +)
 print("Sum of numbers: \\(sum)")`,
+    extension: "swift",
   },
 };
 
