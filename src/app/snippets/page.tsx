@@ -8,7 +8,7 @@ import NavigationHeader from "@/components/NavigationHeader";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { BookOpen, Code, Grid, Layers, Search, X, Tag } from "lucide-react";
-import { Badge } from "../../../components/ui/badge";
+import { Badge } from "../../../_components/ui/badge";
 import SnippetCard from "./_components/SnippetCard";
 
 function SnippetsPage() {

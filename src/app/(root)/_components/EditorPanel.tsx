@@ -17,7 +17,7 @@ import { useClerk } from "@clerk/nextjs";
 import { EditorPanelSkeleton } from "./EditorPanelSkeleton";
 import useMounted from "@/hooks/useMounted";
 import ShareSnippetDialog from "./ShareSnippetDialog";
-import { Button } from "../../../../components/ui/button";
+import { Button } from "../../../../_components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,16 +25,16 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../../../../components/ui/dropdown-menu";
+} from "../../../../_components/ui/dropdown-menu";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
   TooltipProvider,
-} from "../../../../components/ui/tooltip";
-import { Badge } from "../../../../components/ui/badge";
-import { Tabs, TabsList, TabsTrigger } from "../../../../components/ui/tabs";
-import { Card, CardContent, CardHeader } from "../../../../components/ui/card";
+} from "../../../../_components/ui/tooltip";
+import { Badge } from "../../../../_components/ui/badge";
+import { Tabs, TabsList, TabsTrigger } from "../../../../_components/ui/tabs";
+import { Card, CardContent, CardHeader } from "../../../../_components/ui/card";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
