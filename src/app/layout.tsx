@@ -20,6 +20,14 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "Snyppit",
   description: "Share and run code snippets",
+  icons: {
+    icon: [
+      {
+        url: "/snyppitlogo.svg",
+        type: "image/svg+xml",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
