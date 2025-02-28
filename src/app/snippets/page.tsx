@@ -5,11 +5,18 @@ import { api } from "../../../convex/_generated/api";
 import { useState } from "react";
 import SnippetsPageSkeleton from "./_components/SnippetsPageSkeleton";
 import NavigationHeader from "@/components/NavigationHeader";
-
 import { AnimatePresence, motion } from "framer-motion";
 import { BookOpen, Code, Grid, Layers, Search, X, Tag } from "lucide-react";
 import { Badge } from "../../../_components/ui/badge";
 import SnippetCard from "./_components/SnippetCard";
+import { Button } from "../../../_components/ui/button";
+import { Input } from "../../../_components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../../_components/ui/card";
 
 function SnippetsPage() {
   const snippets = useQuery(api.snippets.getSnippets);
@@ -56,17 +63,7 @@ function SnippetsPage() {
           >
             <Badge
               variant="outline"
-              className="
-          px-4 py-1.5 
-          bg-gradient-to-r from-blue-500/10 to-purple-500/10 
-          text-sm text-gray-300
-          border-none
-          shadow-[0_0_15px_rgba(59,130,246,0.5)]
-          transition-all duration-300
-          hover:shadow-[0_0_20px_rgba(168,85,247,0.7)]
-          hover:bg-gradient-to-r hover:from-blue-500/20 hover:to-purple-500/20
-          hover:text-gray-100
-        "
+              className="px-4 py-1.5 bg-gradient-to-r from-blue-500/10 to-purple-500/10 text-sm text-gray-300 border-none shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-all duration-300 hover:shadow-[0_0_20px_rgba(168,85,247,0.7)] hover:bg-gradient-to-r hover:from-blue-500/20 hover:to-purple-500/20 hover:text-gray-100"
             >
               <BookOpen className="w-4 h-4 mr-2" />
               Community Code Library
@@ -97,14 +94,12 @@ function SnippetsPage() {
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500" />
             <div className="relative flex items-center">
               <Search className="absolute left-4 w-5 h-5 text-gray-400" />
-              <input
+              <Input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search snippets by title, language, or author..."
-                className="w-full pl-12 pr-4 py-4 bg-[#1e1e2e]/80 hover:bg-[#1e1e2e] text-white
-                  rounded-xl border border-[#313244] hover:border-[#414155] transition-all duration-200
-                  placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                className="w-full pl-12 pr-4 py-4 bg-[#1e1e2e]/80 hover:bg-[#1e1e2e] text-white rounded-xl border border-[#313244] hover:border-[#414155] transition-all duration-200 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
               />
             </div>
           </div>
@@ -116,19 +111,16 @@ function SnippetsPage() {
               <span className="text-sm text-gray-400">Languages:</span>
             </div>
             {popularLanguages.map((lang) => (
-              <button
+              <Button
                 key={lang}
                 onClick={() =>
                   setSelectedLanguage(lang === selectedLanguage ? null : lang)
                 }
-                className={`
-                    group relative px-3 py-1.5 rounded-lg transition-all duration-200
-                    ${
-                      selectedLanguage === lang
-                        ? "text-blue-400 bg-blue-500/10 ring-2 ring-blue-500/50"
-                        : "text-gray-400 hover:text-gray-300 bg-[#1e1e2e] hover:bg-[#262637] ring-1 ring-gray-800"
-                    }
-                  `}
+                className={`group relative px-3 py-1.5 rounded-lg transition-all duration-200 ${
+                  selectedLanguage === lang
+                    ? "text-blue-400 bg-blue-500/10 ring-2 ring-blue-500/50"
+                    : "text-gray-400 hover:text-gray-300 bg-[#1e1e2e] hover:bg-[#262637] ring-1 ring-gray-800"
+                }`}
               >
                 <div className="flex items-center gap-2">
                   <img
@@ -138,17 +130,17 @@ function SnippetsPage() {
                   />
                   <span className="text-sm">{lang}</span>
                 </div>
-              </button>
+              </Button>
             ))}
 
             {selectedLanguage && (
-              <button
+              <Button
                 onClick={() => setSelectedLanguage(null)}
                 className="flex items-center gap-1 px-2 py-1 text-xs text-gray-400 hover:text-gray-300 transition-colors"
               >
                 <X className="w-3 h-3" />
                 Clear
-              </button>
+              </Button>
             )}
 
             <div className="ml-auto flex items-center gap-3">
@@ -158,7 +150,7 @@ function SnippetsPage() {
 
               {/* View Toggle */}
               <div className="flex items-center gap-1 p-1 bg-[#1e1e2e] rounded-lg ring-1 ring-gray-800">
-                <button
+                <Button
                   onClick={() => setView("grid")}
                   className={`p-2 rounded-md transition-all ${
                     view === "grid"
@@ -167,8 +159,8 @@ function SnippetsPage() {
                   }`}
                 >
                   <Grid className="w-4 h-4" />
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={() => setView("list")}
                   className={`p-2 rounded-md transition-all ${
                     view === "list"
@@ -177,7 +169,7 @@ function SnippetsPage() {
                   }`}
                 >
                   <Layers className="w-4 h-4" />
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -206,40 +198,37 @@ function SnippetsPage() {
             animate={{ opacity: 1, scale: 1 }}
             className="relative max-w-md mx-auto mt-20 p-8 rounded-2xl overflow-hidden"
           >
-            <div className="text-center">
-              <div
-                className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br 
-                from-blue-500/10 to-purple-500/10 ring-1 ring-white/10 mb-6"
-              >
-                <Code className="w-8 h-8 text-gray-400" />
-              </div>
-              <h3 className="text-xl font-medium text-white mb-3">
-                No snippets found
-              </h3>
-              <p className="text-gray-400 mb-6">
-                {searchQuery || selectedLanguage
-                  ? "Try adjusting your search query or filters"
-                  : "Be the first to share a code snippet with the community"}
-              </p>
-
-              {(searchQuery || selectedLanguage) && (
-                <button
-                  onClick={() => {
-                    setSearchQuery("");
-                    setSelectedLanguage(null);
-                  }}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#262637] text-gray-300 hover:text-white rounded-lg 
-                    transition-colors"
-                >
-                  <X className="w-4 h-4" />
-                  Clear all filters
-                </button>
-              )}
-            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-xl font-medium text-white mb-3">
+                  No snippets found
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-400 mb-6">
+                  {searchQuery || selectedLanguage
+                    ? "Try adjusting your search query or filters"
+                    : "Be the first to share a code snippet with the community"}
+                </p>
+                {(searchQuery || selectedLanguage) && (
+                  <Button
+                    onClick={() => {
+                      setSearchQuery("");
+                      setSelectedLanguage(null);
+                    }}
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-[#262637] text-gray-300 hover:text-white rounded-lg transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                    Clear all filters
+                  </Button>
+                )}
+              </CardContent>
+            </Card>
           </motion.div>
         )}
       </div>
     </div>
   );
 }
+
 export default SnippetsPage;

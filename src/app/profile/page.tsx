@@ -12,8 +12,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import StarButton from "@/components/StarButton";
-import CodeBlock from "./_components/CodeBlock";
-import { UserResource } from "@clerk/types"
+import { UserResource } from "@clerk/types";
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const TABS = [
   {
@@ -143,7 +144,6 @@ function ProfilePage() {
                               <span className="text-sm font-medium text-white">
                                 {execution.language.toUpperCase()}
                               </span>
-                              <span className="text-xs text-gray-400">•</span>
                               <span className="text-xs text-gray-400">
                                 {new Date(execution._creationTime).toLocaleString()}
                               </span>
@@ -163,7 +163,13 @@ function ProfilePage() {
                       </div>
 
                       <div className="p-4 bg-black/20 rounded-b-xl border border-t-0 border-gray-800/50">
-                        <CodeBlock code={execution.code} language={execution.language} />
+                        <SyntaxHighlighter
+                          language={execution.language}
+                          style={dracula}
+                          className="text-sm font-mono rounded-md"
+                        >
+                          {execution.code}
+                        </SyntaxHighlighter>
 
                         {(execution.output || execution.error) && (
                           <div className="mt-4 p-4 rounded-lg bg-black/40">
@@ -221,10 +227,11 @@ function ProfilePage() {
                   {starredSnippets?.map((snippet) => (
                     <div key={snippet._id} className="group relative">
                       <Link href={`/snippets/${snippet._id}`}>
-                        <div
-                          className="bg-black/20 rounded-xl border border-gray-800/50 hover:border-gray-700/50 
-                          transition-all duration-300 overflow-hidden h-full group-hover:transform
-                        group-hover:scale-[1.02]"
+                        <motion.div
+                          className="bg-black/20 rounded-xl border border-gray-800/50 hover:border-gray-700/50
+                          transition-all duration-300 overflow-hidden h-full group-hover:shadow-md
+                        group-hover:shadow-black/50 group-hover:scale-[1.02]"
+                          style={{ boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)' }}
                         >
                           <div className="p-6">
                             <div className="flex items-center justify-between mb-4">
@@ -268,7 +275,7 @@ function ProfilePage() {
                               </pre>
                             </div>
                           </div>
-                        </div>
+                        </motion.div>
                       </Link>
                     </div>
                   ))}

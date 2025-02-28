@@ -57,12 +57,12 @@ function OutputPanel() {
 
   return (
     <Card
-      className={`relative bg-[#181825] transition-all duration-300 ${isExpanded ? "fixed inset-4 z-50" : ""}`}
+      className={`relative bg-gradient-to-r from-[#181825] to-[#1e1e2e] shadow-lg transition-all duration-300 ${isExpanded ? "fixed inset-4 z-50" : ""}`}
     >
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-6 h-6 rounded-lg bg-[#1e1e2e] ring-1 ring-gray-800/50">
+            <div className="flex items-center justify-center w-6 h-6 rounded-lg bg-[#1e1e2e] ring-2 ring-blue-500">
               <Terminal className="w-4 h-4 text-blue-400" />
             </div>
             <div className="flex items-center gap-2">
@@ -70,7 +70,7 @@ function OutputPanel() {
               {isRunning && (
                 <Badge
                   variant="secondary"
-                  className="text-xs font-semibold px-2 py-0.5 rounded-md bg-blue-500 text-white"
+                  className="text-xs font-semibold px-2 py-0.5 rounded-md bg-blue-500 text-white animate-pulse"
                 >
                   Running
                 </Badge>
@@ -85,18 +85,18 @@ function OutputPanel() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-8 bg-[#1e1e2e] hover:bg-[#2a2a3a]"
+                    className="h-8 bg-[#1e1e2e] hover:bg-[#2a2a3a] shadow-md"
                   >
                     Actions
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="end"
-                  className="z-50 bg-[#1e1e2e] rounded-lg shadow-md"
+                  className="z-50 bg-[#1e1e2e] rounded-lg shadow-lg"
                 >
                   <DropdownMenuItem
                     onClick={handleCopy}
-                    className="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-[#2a2a3a]"
+                    className="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-[#2a2a3a] transition-colors"
                   >
                     <Copy className="w-4 h-4" />
                     <span className="text-sm font-medium">
@@ -105,7 +105,7 @@ function OutputPanel() {
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={handleDownload}
-                    className="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-[#2a2a3a]"
+                    className="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-[#2a2a3a] transition-colors"
                   >
                     <Download className="w-4 h-4" />
                     <span className="text-sm font-medium">Download</span>
@@ -120,7 +120,7 @@ function OutputPanel() {
                     variant="outline"
                     size="sm"
                     onClick={() => setIsExpanded(!isExpanded)}
-                    className="h-8 bg-[#1e1e2e] hover:bg-[#2a2a3a]"
+                    className="h-8 bg-[#1e1e2e] hover:bg-[#2a2a3a] shadow-md"
                   >
                     {isExpanded ? (
                       <Minimize2 className="h-4 w-4" />
@@ -140,13 +140,13 @@ function OutputPanel() {
 
       <CardContent>
         <ScrollArea
-          className={`relative ${isExpanded ? "h-[80vh]" : "h-[600px]"} bg-[#1e1e2e]/50 backdrop-blur-sm border border-[#313244] rounded-xl p-4`}
+          className={`relative ${isExpanded ? "h-[80vh]" : "h-[600px]"} bg-[#1e1e2e]/50 backdrop-blur-sm border border-[#313244] rounded-xl p-4 shadow-inner`}
         >
           {isRunning ? (
             <RunningCodeSkeleton />
           ) : error ? (
             <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 p-2 bg-red-500/10 rounded-lg">
+              <div className="flex-shrink-0 p-2 bg-red-500/10 rounded-lg shadow-md">
                 <AlertTriangle className="w-5 h-5 text-red-400" />
               </div>
               <div className="space-y-1">
@@ -159,7 +159,7 @@ function OutputPanel() {
           ) : output ? (
             <div className="space-y-3">
               <div className="flex items-center gap-2">
-                <div className="flex-shrink-0 p-2 bg-emerald-500/10 rounded-lg">
+                <div className="flex-shrink-0 p-2 bg-emerald-500/10 rounded-lg shadow-md">
                   <CheckCircle className="w-5 h-5 text-emerald-400" />
                 </div>
                 <span className="font-medium text-emerald-400">

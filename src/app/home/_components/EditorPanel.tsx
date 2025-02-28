@@ -120,11 +120,21 @@ function EditorPanel() {
   if (!mounted) return null;
 
   return (
-    <div className="relative">
-      <Card className="relative bg-[#12121a]/90 backdrop-blur border-white/[0.05]">
+    <motion.div
+      className="relative"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <Card className="relative bg-[#12121a]/90 backdrop-blur border-white/[0.05] shadow-lg hover:shadow-xl transition-shadow duration-300">
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <motion.div
+              className="flex items-center gap-3"
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+            >
               <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#1e1e2e] ring-1 ring-white/5">
                 <Image
                   src={"/" + language + ".png"}
@@ -135,40 +145,45 @@ function EditorPanel() {
               </div>
               <div className="flex flex-col">
                 <h2 className="text-sm font-medium text-white">Code Editor</h2>
-                <Badge
-                  variant="outline"
-                  className="w-fit mt-1 text-xs font-semibold px-2 py-0.5 rounded-md"
-                  style={{
-                    backgroundColor:
-                      language === "javascript"
-                        ? "#f0db4f" // Yellow for JavaScript
-                        : language === "python"
-                          ? "#3776ab" // Blue for Python
-                          : language === "java"
-                            ? "#ea2d2e" // Red for Java
-                            : language === "typescript"
-                              ? "#007acc" // Blue for TypeScript
-                              : "#6b7280", // Default grey
-                    color: "#1e293b", // Dark text for contrast
-                  }}
+                <motion.div
+                  className="transition-transform inline-block"
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ duration: 0.2 }}
                 >
-                  {LANGUAGE_CONFIG[language].label}
-                </Badge>
+                  <Badge
+                    className="w-fit mt-1 text-xs font-semibold px-2 py-0.5 rounded-md"
+                    style={{
+                      backgroundColor:
+                        language === "javascript"
+                          ? "#f0db4f" // Yellow for JavaScript
+                          : language === "python"
+                            ? "#3776ab" // Blue for Python
+                            : language === "java"
+                              ? "#ea2d2e" // Red for Java
+                              : language === "typescript"
+                                ? "#007acc" // Blue for TypeScript
+                                : "#6b7280", // Default grey
+                      color: "#1e293b", // Dark text for contrast
+                    }}
+                  >
+                    {LANGUAGE_CONFIG[language].label}
+                  </Badge>
+                </motion.div>
               </div>
-            </div>
+            </motion.div>
 
             <div className="flex items-center gap-2">
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
+                    <motion.button
+                      whileHover={{ scale: 1.1, backgroundColor: "#2a2a3a" }}
+                      whileTap={{ scale: 0.95 }}
+                      className="h-8 bg-[#1e1e2e] rounded-md transition-transform duration-100"
                       onClick={handleRefresh}
-                      className="h-8 bg-[#1e1e2e] hover:bg-[#2a2a3a]"
                     >
                       <RotateCcwIcon className="w-4 h-4" />
-                    </Button>
+                    </motion.button>
                   </TooltipTrigger>
                   <TooltipContent>Reset code</TooltipContent>
                 </Tooltip>
@@ -176,18 +191,23 @@ function EditorPanel() {
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="h-8 bg-[#1e1e2e] hover:bg-[#2a2a3a]"
+                  <motion.button
+                    whileHover={{ scale: 1.1, backgroundColor: "#2a2a3a" }}
+                    whileTap={{ scale: 0.95 }}
+                    className="h-8 bg-[#1e1e2e] rounded-md transition-transform duration-100"
                   >
                     <Settings className="w-4 h-4" />
-                  </Button>
+                  </motion.button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuLabel>Editor Settings</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleDownloadCode}>
+                <DropdownMenuContent className="bg-[#1e1e2e] border-white/[0.05]">
+                  <DropdownMenuLabel className="text-white">
+                    Editor Settings
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator className="bg-white/[0.1]" />
+                  <DropdownMenuItem
+                    onClick={handleDownloadCode}
+                    className="text-white hover:bg-blue-500/10"
+                  >
                     <Download className="w-4 h-4 mr-2" />
                     Download Code
                   </DropdownMenuItem>
@@ -196,11 +216,11 @@ function EditorPanel() {
 
               {/* Share Button */}
               <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => setIsShareDialogOpen(true)}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-lg overflow-hidden bg-gradient-to-r
-               from-blue-500 to-blue-600 opacity-90 hover:opacity-100 transition-opacity"
+             from-blue-500 to-blue-600 opacity-90 hover:opacity-100 transition-opacity transition-transform duration-100"
               >
                 <ShareIcon className="size-4 text-white" />
                 <span className="text-sm font-medium text-white ">Share</span>
@@ -208,30 +228,42 @@ function EditorPanel() {
             </div>
           </div>
 
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
-            <TabsList className="bg-[#1e1e2e] rounded-md p-1 space-x-1">
-              <TabsTrigger
-                value="editor"
-                className={cn(
-                  "w-32 md:w-40 lg:w-48 h-10 rounded-md outline outline-1 outline-transparent hover:outline-blue-500 hover:bg-blue-500/10 transition-colors duration-200"
-                )}
-              >
-                Editor
-              </TabsTrigger>
-              <TabsTrigger
-                value="settings"
-                className={cn(
-                  "w-32 md:w-40 lg:w-48 h-10 rounded-md outline outline-1 outline-transparent hover:outline-blue-500 hover:bg-blue-500/10 transition-colors duration-200"
-                )}
-              >
-                Settings
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+          <motion.div
+            className="mt-4"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
+              <TabsList className="bg-[#1e1e2e] rounded-md p-1 space-x-1">
+                <TabsTrigger
+                  value="editor"
+                  className={cn(
+                    "relative w-32 md:w-40 lg:w-48 h-10 rounded-md outline outline-1 outline-transparent hover:outline-blue-500 hover:bg-blue-500/10 transition-colors duration-200 data-[state=active]:bg-blue-500 data-[state=active]:text-white"
+                  )}
+                >
+                  Editor
+                </TabsTrigger>
+                <TabsTrigger
+                  value="settings"
+                  className={cn(
+                    "relative w-32 md:w-40 lg:w-48 h-10 rounded-md outline outline-1 outline-transparent hover:outline-blue-500 hover:bg-blue-500/10 transition-colors duration-200 data-[state=active]:bg-blue-500 data-[state=active]:text-white"
+                  )}
+                >
+                  Settings
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </motion.div>
         </CardHeader>
         <CardContent>
           {activeTab === "editor" ? (
-            <div className="relative group rounded-xl overflow-hidden ring-1 ring-white/[0.05]">
+            <motion.div
+              className="relative group rounded-xl overflow-hidden ring-1 ring-white/[0.05]"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.1, duration: 0.5 }}
+            >
               {clerk.loaded ? (
                 <Editor
                   height="600px"
@@ -268,11 +300,19 @@ function EditorPanel() {
               ) : (
                 <EditorPanelSkeleton />
               )}
-            </div>
+            </motion.div>
           ) : (
-            <div className="p-4 space-y-4">
+            <motion.div
+              className="p-4 space-y-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.1, duration: 0.5 }}
+            >
               {/* Font Size Slider */}
-              <div className="flex items-center gap-2 px-2 py-1 bg-[#1e1e2e] rounded-md ring-1 ring-white/5 w-fit">
+              <motion.div
+                className="flex items-center gap-2 px-2 py-1 bg-[#1e1e2e] rounded-md ring-1 ring-white/5 w-fit hover:ring-blue-500 transition-shadow duration-200"
+                whileHover={{ scale: 1.05 }}
+              >
                 <TypeIcon className="size-4 text-gray-400" />
                 <div className="flex items-center gap-2">
                   <input
@@ -287,7 +327,7 @@ function EditorPanel() {
                     {fontSize}
                   </span>
                 </div>
-              </div>
+              </motion.div>
 
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-gray-300">
@@ -295,7 +335,7 @@ function EditorPanel() {
                 </label>
                 <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                   <div>
-                    <label className="flex items-center space-x-2">
+                    <label className="flex items-center space-x-2 hover:bg-blue-500/5 rounded-md p-1 transition-colors duration-200 cursor-pointer">
                       <input
                         type="radio"
                         name="fontFamily"
@@ -311,7 +351,7 @@ function EditorPanel() {
                     </label>
                   </div>
                   <div>
-                    <label className="flex items-center space-x-2">
+                    <label className="flex items-center space-x-2 hover:bg-blue-500/5 rounded-md p-1 transition-colors duration-200 cursor-pointer">
                       <input
                         type="radio"
                         name="fontFamily"
@@ -324,7 +364,7 @@ function EditorPanel() {
                     </label>
                   </div>
                   <div>
-                    <label className="flex items-center space-x-2">
+                    <label className="flex items-center space-x-2 hover:bg-blue-500/5 rounded-md p-1 transition-colors duration-200 cursor-pointer">
                       <input
                         type="radio"
                         name="fontFamily"
@@ -340,7 +380,7 @@ function EditorPanel() {
                     </label>
                   </div>
                   <div>
-                    <label className="flex items-center space-x-2">
+                    <label className="flex items-center space-x-2 hover:bg-blue-500/5 rounded-md p-1 transition-colors duration-200 cursor-pointer">
                       <input
                         type="radio"
                         name="fontFamily"
@@ -360,7 +400,7 @@ function EditorPanel() {
                 </label>
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="flex items-center space-x-2">
+                    <label className="flex items-center space-x-2 hover:bg-blue-500/5 rounded-md p-1 transition-colors duration-200 cursor-pointer">
                       <input
                         type="radio"
                         name="wordWrap"
@@ -381,7 +421,7 @@ function EditorPanel() {
                     </label>
                   </div>
                   <div>
-                    <label className="flex items-center space-x-2">
+                    <label className="flex items-center space-x-2 hover:bg-blue-500/5 rounded-md p-1 transition-colors duration-200 cursor-pointer">
                       <input
                         type="radio"
                         name="wordWrap"
@@ -402,7 +442,7 @@ function EditorPanel() {
                     </label>
                   </div>
                   <div>
-                    <label className="flex items-center space-x-2">
+                    <label className="flex items-center space-x-2 hover:bg-blue-500/5 rounded-md p-1 transition-colors duration-200 cursor-pointer">
                       <input
                         type="radio"
                         name="wordWrap"
@@ -423,7 +463,7 @@ function EditorPanel() {
                     </label>
                   </div>
                   <div>
-                    <label className="flex items-center space-x-2">
+                    <label className="flex items-center space-x-2 hover:bg-blue-500/5 rounded-md p-1 transition-colors duration-200 cursor-pointer">
                       <input
                         type="radio"
                         name="wordWrap"
@@ -446,14 +486,14 @@ function EditorPanel() {
                 </div>
               </div>
               {/* Add more settings as needed */}
-            </div>
+            </motion.div>
           )}
         </CardContent>
       </Card>
       {isShareDialogOpen && (
         <ShareSnippetDialog onClose={() => setIsShareDialogOpen(false)} />
       )}
-    </div>
+    </motion.div>
   );
 }
 
