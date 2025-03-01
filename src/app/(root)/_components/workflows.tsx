@@ -19,11 +19,6 @@ export default function Workflows() {
             <h2 className="animate-[gradient_6s_linear_infinite] bg-[linear-gradient(to_right,var(--color-gray-200),var(--color-indigo-200),var(--color-gray-50),var(--color-indigo-300),var(--color-gray-200))] bg-[length:200%_auto] bg-clip-text pb-4 font-nacelle text-3xl font-semibold text-transparent md:text-4xl">
               Map your product journey
             </h2>
-            <p className="text-lg text-indigo-200/65">
-              Simple and elegant interface to start collaborating with your team
-              in minutes. It seamlessly integrates with your code and your
-              favorite programming languages.
-            </p>
           </div>
           {/* Spotlight items */}
           <Spotlight className="group mx-auto grid max-w-sm items-start gap-6 lg:max-w-none lg:grid-cols-3">
@@ -68,8 +63,9 @@ export default function Workflows() {
                     </span>
                   </div>
                   <p className="text-indigo-200/65">
-                    Streamline the product development flow with a content
-                    platform that's aligned across specs and insights.
+                    Multi-Language Code Editor – Supports 10+ programming
+                    languages with syntax highlighting, autocomplete, and
+                    real-time collaboration
                   </p>
                 </div>
               </div>
@@ -115,8 +111,9 @@ export default function Workflows() {
                     </span>
                   </div>
                   <p className="text-indigo-200/65">
-                    Streamline the product development flow with a content
-                    platform that's aligned across specs and insights.
+                    Community Snippet Library – Users can save, categorize, and
+                    share code snippets publicly or privately, with a search and
+                    tagging system.
                   </p>
                 </div>
               </div>
@@ -162,8 +159,9 @@ export default function Workflows() {
                     </span>
                   </div>
                   <p className="text-indigo-200/65">
-                    Streamline the product development flow with a content
-                    platform that's aligned across specs and insights.
+                    Version Control & Forking – Enables snippet versioning,
+                    allowing users to track changes and fork snippets to create
+                    their own variations.
                   </p>
                 </div>
               </div>
